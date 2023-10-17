@@ -21,7 +21,7 @@ export const trackEvent = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   eventParam?: Record<string, any>,
 ) => {
-  const analytics = getAnalytics()
+  const analytics = getAnalytics(app)
   logEvent(analytics, eventName, eventParam)
 }
 
