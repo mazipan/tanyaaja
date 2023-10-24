@@ -1,7 +1,7 @@
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 
-import { destroySession, getSession } from '@/lib/notion'
+import { revokeRefreshTokens, verifyIdToken } from '@/lib/firebase-admin'
 
 export async function DELETE(request: Request) {
   const headersInstance = headers()
@@ -9,12 +9,10 @@ export async function DELETE(request: Request) {
 
   try {
     if (token) {
-      const session = await getSession(token)
-      if (session.results.length > 0) {
-        const foundPage = session.results[0]
-        if (foundPage) {
-          destroySession(foundPage?.id)
-        }
+      const decodedToken = await verifyIdToken(token)
+
+      if (decodedToken?.uid) {
+        await revokeRefreshTokens(decodedToken.uid)
       }
     }
     return NextResponse.json({ message: 'Session destroyed' })
