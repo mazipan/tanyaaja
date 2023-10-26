@@ -239,6 +239,7 @@ export const getPublicUserList = async ({
 
   return response
 }
+
 export const getPublicUserListForSiteMap = async () => {
   const response = await notion.databases.query({
     database_id: DB_USER,
@@ -343,25 +344,34 @@ export const submitQuestion = async (param: SubmitQuestionArgs) => {
   })
 }
 
-export const getQuestionsByUid = async (uid: string) => {
+export const getQuestionsByUid = async (
+  uid: string,
+  withStatus: boolean = true,
+) => {
+  const filteredByUid = {
+    property: 'uid',
+    rich_text: {
+      equals: uid,
+    },
+  }
+
+  const filter = withStatus
+    ? {
+        and: [
+          filteredByUid,
+          {
+            property: 'status',
+            status: {
+              equals: 'Not started',
+            },
+          },
+        ],
+      }
+    : filteredByUid
+
   const response = await notion.databases.query({
     database_id: DB_QUESTION,
-    filter: {
-      and: [
-        {
-          property: 'uid',
-          rich_text: {
-            equals: uid,
-          },
-        },
-        {
-          property: 'status',
-          status: {
-            equals: 'Not started',
-          },
-        },
-      ],
-    },
+    filter,
   })
 
   return response
