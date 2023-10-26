@@ -19,3 +19,5 @@ export const verifyIdToken = (
   idToken: string,
   checkRevoked?: boolean,
 ): Promise<DecodedIdToken> => Auth.verifyIdToken(idToken, checkRevoked)
+
+export const deleteUser = (uid: string) => Auth.deleteUser(uid)

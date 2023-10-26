@@ -1,6 +1,7 @@
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 
+import { deleteUser } from '@/lib/firebase-auth-edge'
 import { archivePage, deleteQuestionsByUid, getUserByUid } from '@/lib/notion'
 
 export async function DELETE() {
@@ -18,8 +19,13 @@ export async function DELETE() {
     )
   }
 
-  // Archive Questions and User
-  await Promise.allSettled([deleteQuestionsByUid(uid), archivePage(user.id)])
+  // Notion: archive Questions and Users
+  // Firebase: delete user
+  await Promise.allSettled([
+    deleteQuestionsByUid(uid),
+    archivePage(user.id),
+    deleteUser(uid),
+  ])
 
   return new Response(null, {
     status: 204,
