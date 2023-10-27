@@ -45,6 +45,7 @@
     "lucide-react": "^0.284.0",
     "nanoid": "^5.0.1",
     "next": "13.5.4",
+    "next-firebase-auth-edge": "^0.9.0",
     "next-themes": "^0.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
